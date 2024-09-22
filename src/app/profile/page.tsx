@@ -11,6 +11,7 @@ export default function profile() {
     async function fetchdata() {
       try {
         const res = await axios.get("/api/users/me");
+        console.log(res.data.data+"data in profile");
         console.log(res.data.data.username);
         setData(res.data.data._id);
       } catch (error) {

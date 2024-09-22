@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import axios from "axios";
+
 
 import {
   Table,
@@ -46,29 +48,17 @@ function Source(user) {
     amount: "",
   });
 
-  const handleAddSource = () => {
-    // // Validate that both source name and amount are provided
-    // if (newSource.source && newSource.amount) {
-    //   const token = localStorage.getItem("token");
-    //   // Make a POST request to your backend route
-    //   fetch("https://spendwiser-backend.vercel.app/api/addSource", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       source: newSource.source,
-    //       amount: newSource.amount,
-    //     }),
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       setSources((prevSources) => [...prevSources, data.result]);
-    //       setNewSource({ source: "", amount: "" });
-    //     })
-    //     .catch((error) => console.error("Error adding source:", error));
-    // }
+  const handleAddSource = async() => {
+    console.log("h");
+    console.log(sources)
+    try{
+      const response = await axios.post("/api/sources/addsources",newSource)
+      console.log("Add source success",response.data);
+
+
+    }catch(error:any){
+      console.log(error)
+    }
   };
 
   const handleDeleteSource = (index) => {
@@ -131,21 +121,18 @@ function Source(user) {
     //   .catch((error) => console.error("Error editing source:", error));
   };
 
-//   useEffect(() => {
-//     // Fetch data from the backend when the component mounts
-//     const token = localStorage.getItem("token");
-//     fetch("https://spendwiser-backend.vercel.app/api/getAllSources", {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         console.log(data.allSources);
-//         setSources(data.allSources);
-//       })
-//       .catch((error) => console.error("Error fetching data:", error));
-//   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/sources/getallsources");
+        console.log("response", response.data.response);
+        setSources(response.data.response)
+      } catch (error) {
+        console.log(error + "after getting all sources");
+      }
+    };
+    fetchData();
+  },[]);
 
   return (
     <div>
