@@ -36,32 +36,22 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useEffect } from "react";
 
 function Category(user) {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ category: "" });
   const [editCategory, setEditCategory] = useState({ _id: "", category: "" });
 
-  const handleAddCategory = () => {
-    // if (newCategory.category) {
-    //   const token = localStorage.getItem("token");
-    //   fetch("https://spendwiser-backend.vercel.app/api/addCategory", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       category: newCategory.category,
-    //     }),
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       setCategories((prevCategories) => [...prevCategories, data.result]);
-    //       setNewCategory({ category: "" });
-    //     })
-    //     .catch((error) => console.error("Error adding category:", error));
-    // }
+  const handleAddCategory = async () => {
+    console.log("Adding new category" + newCategory)
+    try{
+      const response = await axios.post("/api/categories/addcategories",newCategory)
+      console.log("Add category success",response.data);
+    }catch(error){
+      console.log(error)
+    }
   };
 
   const handleDeleteCategory = (index) => {
@@ -123,19 +113,18 @@ function Category(user) {
     //   .catch((error) => console.error("Error editing category:", error));
   };
 
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//     fetch("https://spendwiser-backend.vercel.app/api/getAllCategories", {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         setCategories(data.allCategories);
-//       })
-//       .catch((error) => console.error("Error fetching data:", error));
-//   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/categories/getallcategories");
+        console.log("response", response.data.response);
+        setCategories(response.data.response)
+      } catch (error) {
+        console.log(error + "after getting all sources");
+      }
+    };
+    fetchData();
+  },[]);
 
   return (
     <div>

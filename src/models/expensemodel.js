@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 
 
 const expenseSchema = new mongoose.Schema({
-    source: { type: Schema.Types.ObjectId, ref: "Source", required: true },
-    category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+    source: { type: mongoose.Schema.Types.ObjectId, ref: "Source", required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     amount: { type: Number, required: true },
     date: { type: Date, required: true },
     user: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
     },

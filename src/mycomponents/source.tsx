@@ -40,7 +40,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-function Source(user) {
+function Source() {
   const [sources, setSources] = useState([{ source: "", amount: "" }]);
 
   const [newSource, setNewSource] = useState({ source: "", amount: "" });

@@ -1,5 +1,7 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
+import axios from "axios";
+
 
 import {
   Table,
@@ -10,28 +12,56 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEffect, useState } from "react";
 
-function List({ user}) {
-//   const transactions = [
-//     ...incomes.map((income, index) => ({
-//       ...income,
-//       type: "INCOME",
-//       timestamp: new Date(income.date).getTime(),
-//     })),
-//     ...expenses.map((expense, index) => ({
-//       ...expense,
-//       type: "EXPENSE",
-//       timestamp: new Date(expense.date).getTime(),
-//     })),
-//   ];
+function List() {
+  const[expenses,setExpenses] = useState([]);
+  const [incomes,setIncomes] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/expenses/getallexpenses");
+        console.log("response", response.data.response);
+        setExpenses(response.data.response)
+      } catch (error) {
+        console.log(error + "after getting all expenses");
+      }
+    };
+    fetchData();
+  },[]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/incomes/getallincomes");
+        console.log("response", response.data.response);
+        setIncomes(response.data.response)
+      } catch (error) {
+        console.log(error + "after getting all incomes");
+      }
+    };
+    fetchData();
+  },[]);
 
-//   const sortedTransactions = transactions.sort((a, b) => {
-    // const dateComparison = new Date(b.date) - new Date(a.date);
-    // if (dateComparison !== 0) {
-    //   return dateComparison;
-    // }
-    // return b.timestamp - a.timestamp;
-//   });
+  const transactions = [
+    ...incomes.map((income, index) => ({
+      ...income,
+      type: "INCOME",
+      timestamp: new Date(income.date).getTime(),
+    })),
+    ...expenses.map((expense, index) => ({
+      ...expense,
+      type: "EXPENSE",
+      timestamp: new Date(expense.date).getTime(),
+    })),
+  ];
+
+  const sortedTransactions = transactions.sort((a, b) => {
+    const dateComparison = new Date(b.date) - new Date(a.date);
+    if (dateComparison !== 0) {
+      return dateComparison;
+    }
+    return b.timestamp - a.timestamp;
+  });
 
   return (
     <div className="mt-10 w-full">
@@ -47,7 +77,7 @@ function List({ user}) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {/* {sortedTransactions.map((transaction) => (
+            {sortedTransactions.map((transaction) => (
               <TableRow key={transaction._id}>
                 <TableCell className="font-medium">
                   {format(new Date(transaction.date), "PPP")}
@@ -64,7 +94,7 @@ function List({ user}) {
                     :  <p className="text-red-500">{"-"+transaction.amount}</p>}
                 </TableCell>
               </TableRow>
-            ))} */}
+            ))}
           </TableBody>
         </Table>
       </ScrollArea>

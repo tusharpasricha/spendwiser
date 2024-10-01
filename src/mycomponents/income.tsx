@@ -29,7 +29,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
-function Income({ user }) {
+function Income() {
   const [date, setDate] = useState();
   const [sources, setSources] = useState([]);
   const [selectedSource, setSelectedSource] = useState("");

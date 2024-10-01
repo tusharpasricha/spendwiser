@@ -98,16 +98,16 @@ export default function Profile() {
           <>
             <div className="flex flex-row justify-around items-center my-11">
               {/* <UserProfile user={id}/> */}
-              <Expense user={id} />
-              <Income user={id} />
+              <Expense />
+              <Income />
               {/* <div className="flex flex-col justify-around"> */}
-                <Source user={id} />
-                <Category user={id} />
+                <Source />
+                <Category  />
               {/* </div> */}
             </div>
             <div className="flex flex-col justify-center items-center my-11">
-                <Track user={id} />
-                <List user={id} />
+                <Track  />
+                <List />
             </div>
             
           </>
