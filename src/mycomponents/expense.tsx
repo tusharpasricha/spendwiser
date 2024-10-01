@@ -1,3 +1,4 @@
+"use client"
 import {
     Card,
     CardContent,
@@ -29,7 +30,8 @@ import {
   import { cn } from "@/lib/utils";
   
   import { useState, useEffect } from "react";
-  
+  import axios from "axios";
+
   
   function Expense({ user }) {
     const [date, setDate] = useState();
@@ -42,23 +44,19 @@ import {
     const [loading, setLoading] = useState(true); 
   
   
-    // useEffect(() => {
-    //   const token = localStorage.getItem("token");
-    //   fetch("https://spendwiser-backend.vercel.app/api/getAllSources", {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       setSources(data.allSources);
-    //       setLoading(false);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error fetching sources:", error)
-    //       setLoading(false);
-    //     });
-    // }, []);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get("/api/sources/getallsources");
+          console.log("response", response.data.response);
+          setSources(response.data.response)
+        } catch (error) {
+          console.log(error + "after getting all sources");
+        }
+      };
+      fetchData();
+    },[]);
+  
   
     // useEffect(() => {
     //   const token = localStorage.getItem("token");
@@ -139,11 +137,11 @@ import {
                   <SelectValue placeholder="Source" />
                 </SelectTrigger>
                 <SelectContent>
-                  {/* {sources.map((source) => (
+                  {sources.map((source) => (
                     <SelectItem key={source._id} value={source._id}>
                       {source.source}
                     </SelectItem>
-                  ))} */}
+                  ))}
                 </SelectContent>
               </Select>
             )}

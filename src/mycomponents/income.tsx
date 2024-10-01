@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import {
   Card,
@@ -25,6 +27,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 
 function Income({ user }) {
   const [date, setDate] = useState();
@@ -34,60 +37,38 @@ function Income({ user }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(true);
 
-  //   useEffect(() => {
-  //     const token = localStorage.getItem("token");
-  //     fetch("https://spendwiser-backend.vercel.app/api/getAllSources", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setSources(data.allSources);
-  //         setLoading(false)
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error fetching sources:", error)
-  //         setLoading(false)
-  //       });
-  //   }, []);
 
-  const handleSave = () => {
-    // const token = localStorage.getItem("token");
-    // if (!selectedSource || !amount || !date) {
-    //   setErrorMsg("Fill out all the fields");
-    //   return;
-    // }
-    // setErrorMsg("");
-    // if (selectedSource && amount && date) {
-    //   fetch("https://spendwiser-backend.vercel.app/api/addIncome", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       sourceId: selectedSource,
-    //       amount: amount,
-    //       date: date,
-    //     }),
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       if (data.success) {
-    //         console.log("Income added successfully:", data.savedIncome);
-    //         onIncomeSaved(data.savedIncome);
-    //       } else {
-    //         console.error("Error adding income:", data.errors);
-    //       }
-    //     })
-    //     .catch((error) => console.error("Error adding income:", error));
-    // }
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("/api/sources/getallsources");
+        console.log("response", response.data.response);
+        setSources(response.data.response)
+      } catch (error) {
+        console.log(error + "after getting all sources");
+      }
+    };
+    fetchData();
+  },[]);
 
-  //   if (loading) {
-  //     return <div>Loading...</div>;
-  //   }
+
+  const handleSave = async () => {
+    if (!selectedSource || !amount || !date) {
+      setErrorMsg("Fill out all the fields");
+      return;
+    }
+     setErrorMsg("");
+     if (selectedSource && amount && date) {
+      try{
+        console.log('saving income')
+        const response = await axios.post("/api/incomes/addincomes",{source:selectedSource,amount:amount,date:date});
+        console.log("income saved"+response.data)
+
+      }catch(error){
+        console.log(error + "after adding income");
+      }
+     }
+    };
 
   return (
     <Card className="dark">
@@ -106,11 +87,11 @@ function Income({ user }) {
               <SelectValue placeholder="Source" />
             </SelectTrigger>
             <SelectContent>
-              {/* {sources.map((source) => (
+              {sources.map((source) => (
                 <SelectItem key={source._id} value={source._id}>
                   {source.source}
                 </SelectItem>
-              ))} */}
+              ))}
             </SelectContent>
           </Select>
         )}

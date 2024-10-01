@@ -1,3 +1,4 @@
+"use client"
 import { useRouter } from "next/navigation";
 
 export default function LandingPage() {
@@ -5,7 +6,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-black via-gray-900 to-black text-white flex flex-col justify-between">
-      {/* Top Section */}
       <div className="flex flex-col items-center text-center py-24 px-8 space-y-10">
         <h1 className="text-6xl font-bold tracking-wide text-gray-200 drop-shadow-lg">
           Take Charge with SpendWiser💰
@@ -18,14 +18,12 @@ export default function LandingPage() {
           onClick={() => router.push("/login")}
           className="bg-gray-700 text-white px-12 py-4 rounded-full text-2xl font-semibold shadow-lg hover:bg-gray-600 hover:shadow-2xl transition-all duration-300 transform hover:scale-105 mt-10"
         >
-          Let's Get Started
+          Lets Get Started
         </button>
       </div>
 
-      {/* Revamped Middle Section */}
       <div className="relative py-24 px-8">
         <div className="relative z-10 text-center text-gray-200 space-y-16 max-w-4xl mx-auto">
-          {/* Key Highlights */}
           <div className="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0 md:space-x-8">
             <div className="text-center px-6">
               <div className="text-2xl font-semibold text-gray-300 mb-4">
@@ -56,12 +54,6 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="bg-transparent py-8">
-        <p className="text-center text-gray-600">
-          SpendWiser © 2024. Ready to make your finances work for you?
-        </p>
       </div>
     </div>
   );

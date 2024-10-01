@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import React from "react";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -22,7 +23,6 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const [buttonDisabled, setButtonDisabled] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
 
@@ -31,25 +31,16 @@ export default function LoginPage() {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
       console.log("Login success", response.data);
-      toast.success("Login success");
       router.push("/profile");
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as Error;
       setError("Login failed");
 
-      console.log("Login failed", error.message);
-      toast.error(error.message);
+      console.log("Login failed", err.message);
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (user.email.length > 0 && user.password.length > 0) {
-      setButtonDisabled(false);
-    } else {
-      setButtonDisabled(true);
-    }
-  }, [user]);
 
   return (
     <>

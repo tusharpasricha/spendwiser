@@ -34,7 +34,7 @@ function List({ user}) {
 //   });
 
   return (
-    <>
+    <div className="mt-10 w-full">
       <ScrollArea className="h-72 w-480 rounded-md border">
         <Table>
           <TableCaption>A list of your transactions.</TableCaption>
@@ -68,7 +68,7 @@ function List({ user}) {
           </TableBody>
         </Table>
       </ScrollArea>
-    </>
+    </div>
   );
 }
 

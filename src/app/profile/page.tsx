@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function profile() {
+export default function Profile() {
   const router = useRouter();
   const [data, setData] = useState("");
 
@@ -21,7 +21,7 @@ export default function profile() {
     }
     fetchdata();
 
-    router.push("/profile/${data}");
+    router.push(`/profile/${data}`);
   });
   return (
     <>

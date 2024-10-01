@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
@@ -8,25 +8,45 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import UserProfile from "@/mycomponents/userProfile";
+
 import Expense from "@/mycomponents/expense";
 import Income from "@/mycomponents/income";
 import Source from "@/mycomponents/source";
 import Category from "@/mycomponents/category";
 import Track from "@/mycomponents/track";
 import List from "@/mycomponents/list";
+import Logout from "@/mycomponents/logout";
+
+// async function fetchUserData() {
+//   try {
+//     const res = await fetch("http://localhost:3000/api/users/me", {
+//       cache: 'no-store' // Ensures we fetch fresh data
+//     });
+
+//     if (!res.ok) {
+//       throw new Error("Error fetching user data");
+//     }
+
+//     const data = await res.json();
+//     return data.data;
+//   } catch (error) {
+//     console.error("Failed to fetch user data:", error);
+//     return null;
+//   }
+// }
 
 export default function Profile() {
+
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  
+
+   const [username, setUsername] = useState("");
   const [id, setId] = useState("");
 
-  // Fetch user data when the component loads
   useEffect(() => {
     async function fetchData() {
       try {
@@ -34,26 +54,18 @@ export default function Profile() {
         console.log(res.data);
         console.log(res.data.data._id);
         setId(res.data.data._id);
-        setUsername(res.data.data.username); // Set the username from the response
+        setUsername(res.data.data.username); 
       } catch (error) {
-        console.log(error.message);
+        const err = error as Error
+        console.log(err.message);
         toast.error("Error fetching user data");
         router.push("/login");
       }
     }
     fetchData();
-  }, []); // Empty dependency array ensures this only runs once
+  }, []); 
 
-  const logout = async () => {
-    try {
-      await axios.get("/api/users/logout");
-      toast.success("Logout successful");
-      router.push("/login");
-    } catch (error: any) {
-      console.log(error.message);
-      toast.error(error.message);
-    }
-  };
+
 
   return (
     <>
@@ -76,27 +88,28 @@ export default function Profile() {
               </SheetDescription>
             </SheetHeader>
             <div className="mt-4">
-              <Button variant="destructive" onClick={logout}>
-                Logout
-              </Button>
+              <Logout/>
             </div>
           </SheetContent>
         </Sheet>
       </div>
-      <div className="mt-11">
+      <div className="mt-11 flex-col items-center justify-center">
         {id ? (
           <>
-            <div className="flex flex-row justify-around">
+            <div className="flex flex-row justify-around items-center my-11">
               {/* <UserProfile user={id}/> */}
               <Expense user={id} />
               <Income user={id} />
-              <div className="flex flex-col justify-around">
+              {/* <div className="flex flex-col justify-around"> */}
                 <Source user={id} />
                 <Category user={id} />
-              </div>
+              {/* </div> */}
             </div>
-            <Track user={id} />
-            <List user={id} />
+            <div className="flex flex-col justify-center items-center my-11">
+                <Track user={id} />
+                <List user={id} />
+            </div>
+            
           </>
         ) : (
           <div className="flex h-96 w-full items-center justify-center">

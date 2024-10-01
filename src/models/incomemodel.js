@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 
-const incomeSchema = new Schema({
+const incomeSchema = new mongoose.Schema({
     source: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Source",
       required: true,
     },
@@ -16,7 +16,7 @@ const incomeSchema = new Schema({
       required: true,
     },
     user: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "users",
       required: true,
     },

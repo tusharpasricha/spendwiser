@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import axios from "axios";
@@ -39,7 +41,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 function Source(user) {
-  const [sources, setSources] = useState([{ source: "Bank", amount: 250.0 }]);
+  const [sources, setSources] = useState([{ source: "", amount: "" }]);
 
   const [newSource, setNewSource] = useState({ source: "", amount: "" });
   const [editSource, setEditSource] = useState({
@@ -49,42 +51,29 @@ function Source(user) {
   });
 
   const handleAddSource = async() => {
-    console.log("h");
-    console.log(sources)
+    console.log("Adding new source" + newSource)
     try{
       const response = await axios.post("/api/sources/addsources",newSource)
       console.log("Add source success",response.data);
-
-
-    }catch(error:any){
+    }catch(error){
       console.log(error)
     }
   };
 
-  const handleDeleteSource = (index) => {
-    // const sourceToDelete = sources[index];
-    // console.log(sourceToDelete._id);
-    // const token = localStorage.getItem("token");
 
-    // fetch(`https://spendwiser-backend.vercel.app/api/deleteSource/${sourceToDelete._id}`, {
-    //   method: "DELETE",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       const updatedSources = [...sources];
-    //       updatedSources.splice(index, 1);
-    //       setSources(updatedSources);
-    //     } else {
-    //       console.error("Error deleting source:", data.errors);
-    //     }
-    //   })
-    //   .catch((error) => console.error("Error deleting source:", error));
-  };
+  const handleDeleteSource = async (index) => {
+    console.log("here"+index)
+     const sourceToDelete = sources[index];
+      console.log(sourceToDelete._id);
+
+      try{
+        const response = await axios.delete("/api/sources/deletesources/", { data: { id: sourceToDelete._id } });        console.log("source Deleted Success"+response)
+        
+      }catch(error){
+        console.log(error)
+      }
+    };
+  
   const handleStartEdit = (index) => {
     // const sourceToEdit = sources[index];
     // setEditSource({ ...sourceToEdit });
@@ -135,8 +124,8 @@ function Source(user) {
   },[]);
 
   return (
-    <div>
-      <ScrollArea className="h-[16vh] w-70 rounded-md border">
+    <>
+      <ScrollArea className="h-[16vh] w-70 rounded-md border ">
         <Table>
           <TableCaption>
             A list of all the sources
@@ -268,7 +257,7 @@ function Source(user) {
           </TableBody>
         </Table>
       </ScrollArea>
-    </div>
+    </>
   );
 }
 export default Source;

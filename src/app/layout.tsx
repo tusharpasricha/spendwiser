@@ -29,6 +29,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <div className="bg-transparent py-8">
+        <p className="text-center text-gray-600">
+          SpendWiser © 2024. Ready to make your finances work for you?
+        </p>
+      </div>
       </body>
     </html>
   );
