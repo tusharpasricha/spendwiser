@@ -128,7 +128,7 @@ function Category(user) {
 
   return (
     <div>
-      <ScrollArea className="h-[16vh] w-70 rounded-md border">
+      <ScrollArea className="rounded-md border">
         <Table>
           <TableCaption>
             A list of all categories
@@ -143,8 +143,8 @@ function Category(user) {
               <TableHead>
               <Popover>
               <PopoverTrigger><Button>Add</Button></PopoverTrigger>
-              <PopoverContent className="dark">
-                <Card className="dark">
+              <PopoverContent >
+                <Card >
                   <CardHeader>
                     <CardTitle>ADD</CardTitle>
                     <CardDescription>
@@ -184,8 +184,8 @@ function Category(user) {
                     <PopoverTrigger onClick={() => handleStartEdit(index)}>
                       Edit
                     </PopoverTrigger>
-                    <PopoverContent className="dark">
-                      <Card className="dark">
+                    <PopoverContent >
+                      <Card>
                         <CardHeader>
                           <CardTitle>Edit</CardTitle>
                           <CardDescription>
@@ -211,10 +211,10 @@ function Category(user) {
                     </PopoverContent>
                   </Popover>
                 </TableCell>
-                <TableCell className="dark">
+                <TableCell>
                   <Dialog>
                     <DialogTrigger>Delete</DialogTrigger>
-                    <DialogContent className="dark">
+                    <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Are you absolutely sure?</DialogTitle>
                         <DialogDescription>

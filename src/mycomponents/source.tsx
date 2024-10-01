@@ -125,7 +125,7 @@ function Source() {
 
   return (
     <>
-      <ScrollArea className="h-[16vh] w-70 rounded-md border ">
+      <ScrollArea className="border rounded-lg">
         <Table>
           <TableCaption>
             A list of all the sources
@@ -134,7 +134,7 @@ function Source() {
           <TableHeader>
             <TableRow>
               <TableHead>Source</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>Amount</TableHead>
               <TableHead></TableHead>
               <TableHead></TableHead>
               <TableHead>
@@ -142,8 +142,8 @@ function Source() {
                   <PopoverTrigger>
                     <Button>Add</Button>
                   </PopoverTrigger>
-                  <PopoverContent className="dark">
-                    <Card className="dark">
+                  <PopoverContent>
+                    <Card>
                       <CardHeader>
                         <CardTitle>ADD</CardTitle>
                         <CardDescription>
@@ -188,14 +188,14 @@ function Source() {
             {sources.map((source, index) => (
               <TableRow key={index}>
                 <TableCell>{source.source}</TableCell>
-                <TableCell className="text-right">{source.amount}</TableCell>
+                <TableCell >{source.amount}</TableCell>
                 <TableCell>
                   <Popover>
                     <PopoverTrigger onClick={() => handleStartEdit(index)}>
                       Edit
                     </PopoverTrigger>
-                    <PopoverContent className="dark">
-                      <Card className="dark">
+                    <PopoverContent>
+                      <Card >
                         <CardHeader>
                           <CardTitle>Edit</CardTitle>
                           <CardDescription>
@@ -234,10 +234,10 @@ function Source() {
                   </Popover>
                 </TableCell>
 
-                <TableCell className="dark">
+                <TableCell>
                   <Dialog>
                     <DialogTrigger>Delete</DialogTrigger>
-                    <DialogContent className="dark">
+                    <DialogContent>
                       <DialogHeader>
                         <DialogTitle>Are you absolutely sure?</DialogTitle>
                         <DialogDescription>

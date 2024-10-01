@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
@@ -40,11 +40,9 @@ import Logout from "@/mycomponents/logout";
 // }
 
 export default function Profile() {
-
   const router = useRouter();
-  
 
-   const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [id, setId] = useState("");
 
   useEffect(() => {
@@ -54,21 +52,19 @@ export default function Profile() {
         console.log(res.data);
         console.log(res.data.data._id);
         setId(res.data.data._id);
-        setUsername(res.data.data.username); 
+        setUsername(res.data.data.username);
       } catch (error) {
-        const err = error as Error
+        const err = error as Error;
         console.log(err.message);
         toast.error("Error fetching user data");
         router.push("/login");
       }
     }
     fetchData();
-  }, []); 
-
-
+  }, []);
 
   return (
-    <>
+    <div>
       <div className="ml-20 mr-10 flex text-7xl justify-between items-center mt-6 ">
         SpendWiser💰
         <Sheet>
@@ -88,7 +84,7 @@ export default function Profile() {
               </SheetDescription>
             </SheetHeader>
             <div className="mt-4">
-              <Logout/>
+              <Logout />
             </div>
           </SheetContent>
         </Sheet>
@@ -98,18 +94,23 @@ export default function Profile() {
           <>
             <div className="flex flex-row justify-around items-center my-11">
               {/* <UserProfile user={id}/> */}
-              <Expense />
-              <Income />
-              {/* <div className="flex flex-col justify-around"> */}
+              <div className="w-1/4">
+                <Expense />
+              </div>
+              <div className="w-1/4">
+                <Income />
+              </div>
+              <div className="w-1/6">
                 <Source />
-                <Category  />
-              {/* </div> */}
+              </div>
+              <div className="w-1/6">
+                <Category/>
+              </div>
             </div>
             <div className="flex flex-col justify-center items-center my-11">
-                <Track  />
-                <List />
+              <Track />
+              <List />
             </div>
-            
           </>
         ) : (
           <div className="flex h-96 w-full items-center justify-center">
@@ -120,6 +121,6 @@ export default function Profile() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

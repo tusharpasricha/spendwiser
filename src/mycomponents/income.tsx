@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import {
@@ -37,41 +37,42 @@ function Income() {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/sources/getallsources");
         console.log("response", response.data.response);
-        setSources(response.data.response)
+        setSources(response.data.response);
       } catch (error) {
         console.log(error + "after getting all sources");
       }
     };
     fetchData();
-  },[]);
-
+  }, []);
 
   const handleSave = async () => {
     if (!selectedSource || !amount || !date) {
       setErrorMsg("Fill out all the fields");
       return;
     }
-     setErrorMsg("");
-     if (selectedSource && amount && date) {
-      try{
-        console.log('saving income')
-        const response = await axios.post("/api/incomes/addincomes",{source:selectedSource,amount:amount,date:date});
-        console.log("income saved"+response.data)
-
-      }catch(error){
+    setErrorMsg("");
+    if (selectedSource && amount && date) {
+      try {
+        console.log("saving income");
+        const response = await axios.post("/api/incomes/addincomes", {
+          source: selectedSource,
+          amount: amount,
+          date: date,
+        });
+        console.log("income saved" + response.data);
+      } catch (error) {
         console.log(error + "after adding income");
       }
-     }
-    };
+    }
+  };
 
   return (
-    <Card className="dark">
+    <Card>
       <CardHeader>
         <CardTitle>ADD Income</CardTitle>
         <CardDescription>Click on Save after Changes</CardDescription>
@@ -83,7 +84,7 @@ function Income() {
           </p>
         ) : (
           <Select onValueChange={(value) => setSelectedSource(value)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger>
               <SelectValue placeholder="Source" />
             </SelectTrigger>
             <SelectContent>

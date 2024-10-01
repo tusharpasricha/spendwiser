@@ -107,7 +107,7 @@ function Expense() {
   };
 
   return (
-    <Card className="dark">
+    <Card >
       <CardHeader>
         <CardTitle>ADD Expense</CardTitle>
         <CardDescription>Click on Save after Changes</CardDescription>
@@ -119,7 +119,7 @@ function Expense() {
           <p className="text-red-500">Please add a source before adding expenses.</p>
         ) : (
           <Select onValueChange={setSelectedSource}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger >
               <SelectValue placeholder="Source" />
             </SelectTrigger>
             <SelectContent>
@@ -139,7 +139,7 @@ function Expense() {
           <p className="text-red-500">Please add a category before adding expenses.</p>
         ) : (
           <Select onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger>
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
@@ -159,16 +159,13 @@ function Expense() {
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
-              className={cn(
-                "w-[280px] justify-start text-left font-normal",
-                !date && "text-muted-foreground"
-              )}
+             
             >
-              <CalendarIcon className="mr-2 h-4 w-4" />
+              <CalendarIcon  />
               {date ? format(date, "PPP") : <span>Pick a date</span>}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent>
             <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
           </PopoverContent>
         </Popover>

@@ -45,6 +45,9 @@ export default function LoginPage() {
   return (
     <>
       <div className="flex justify-center items-center flex-col min-h-screen">
+      <div className="absolute top-10 left-10 text-6xl ">
+    SpendWiser💰
+    </div>
         <Card>
           <CardHeader>
             <CardTitle>Login</CardTitle>
