@@ -1,5 +1,5 @@
-'use client'
-import { useState} from "react";
+"use client";
+import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 import {
@@ -39,78 +39,73 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect } from "react";
 
-function Category(user) {
+function Category() {
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({ category: "" });
   const [editCategory, setEditCategory] = useState({ _id: "", category: "" });
 
   const handleAddCategory = async () => {
-    console.log("Adding new category" + newCategory)
-    try{
-      const response = await axios.post("/api/categories/addcategories",newCategory)
-      console.log("Add category success",response.data);
-    }catch(error){
-      console.log(error)
+    console.log("Adding new category" + newCategory);
+    try {
+      const response = await axios.post(
+        "/api/categories/addcategories",
+        newCategory
+      );
+      console.log("Add category success", response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  const handleDeleteCategory = (index) => {
-    // const categoryToDelete = categories[index];
-    // const token = localStorage.getItem("token");
-    // console.log("Deleting category ID:", categoryToDelete._id); 
+  const handleDeleteCategory = async (index) => {
+    console.log("here" + index);
+    const categoryToDelete = categories[index];
+    console.log(categoryToDelete._id);
 
-    // fetch(`https://spendwiser-backend.vercel.app/api/deleteCategory/${categoryToDelete._id}`, {
-    //   method: "DELETE",
-    //   headers: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       const updatedCategories = categories.filter(
-    //         (category) => category._id !== categoryToDelete._id
-    //       );
-    //       setCategories(updatedCategories);
-    //     } else {
-    //       console.error("Error deleting category:", data.errors);
-    //     }
-    //   })
-    //   .catch((error) => console.error("Error deleting category:", error));
+    try {
+      const response = await axios.delete("/api/categories/deletecategories/", {
+        data: { id: categoryToDelete._id },
+      });
+      console.log("category Deleted Success" + response);
+      const updatedCategories = categories.filter((_, i) => i !== index); // Remove the deleted category from the list
+      setCategories(updatedCategories);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleStartEdit = (index) => {
-    // const categoryToEdit = categories[index];
-    // setEditCategory({ ...categoryToEdit });
+    const categoryToEdit = categories[index];
+    setEditCategory({ ...categoryToEdit });
   };
+  const handleSaveEdit = async (index) => {
+    const categoryToEdit = categories[index];
 
-  const handleSaveEdit = () => {
-    // const token = localStorage.getItem("token");
-    // console.log("Editing category ID:", editCategory._id); 
+    console.log("Editing category: ", categoryToEdit);
 
-    // fetch(`https://spendwiser-backend.vercel.app/api/editCategory/${editCategory._id}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: JSON.stringify({
-    //     category: editCategory.category,
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       const updatedCategories = categories.map((category) =>
-    //         category._id === editCategory._id ? data.updatedCategory : category
-    //       );
-    //       setCategories(updatedCategories);
-    //       setEditCategory({ _id: "", category: "" });
-    //     } else {
-    //       console.error("Error editing category:", data.errors);
-    //     }
-    //   })
-    //   .catch((error) => console.error("Error editing category:", error));
+    try {
+      const response = await axios.put("/api/categories/editcategories", {
+        id: categoryToEdit._id,
+        category: editCategory.category,
+      });
+
+      console.log("Edit category success: ", response.data);
+
+      const updatedCategories = [...categories];
+      const editedIndex = updatedCategories.findIndex(
+        (category) => category._id === categoryToEdit._id
+      );
+      if (editedIndex !== -1) {
+        updatedCategories[editedIndex] = {
+          ...updatedCategories[editedIndex],
+          ...response.data.updatedCategory,
+        };
+        setCategories(updatedCategories);
+        setEditCategory({ _id: "", category: "" }); // Reset the edit state
+      }
+    } catch (error) {
+      console.error("Error editing category: ", error);
+    }
   };
 
   useEffect(() => {
@@ -118,21 +113,19 @@ function Category(user) {
       try {
         const response = await axios.get("/api/categories/getallcategories");
         console.log("response", response.data.response);
-        setCategories(response.data.response)
+        setCategories(response.data.response);
       } catch (error) {
-        console.log(error + "after getting all sources");
+        console.log(error + "after getting all category");
       }
     };
     fetchData();
-  },[]);
+  }, []);
 
   return (
     <div>
       <ScrollArea className="rounded-md border">
         <Table>
-          <TableCaption>
-            A list of all categories
-          </TableCaption>
+          <TableCaption>A list of all categories</TableCaption>
 
           <TableHeader>
             <TableRow>
@@ -141,35 +134,37 @@ function Category(user) {
               <TableHead></TableHead>
 
               <TableHead>
-              <Popover>
-              <PopoverTrigger><Button>Add</Button></PopoverTrigger>
-              <PopoverContent >
-                <Card >
-                  <CardHeader>
-                    <CardTitle>ADD</CardTitle>
-                    <CardDescription>
-                      Click on Save after Changes
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Input
-                      placeholder="Category"
-                      value={newCategory.category}
-                      onChange={(e) =>
-                        setNewCategory({
-                          ...newCategory,
-                          category: e.target.value,
-                        })
-                      }
-                    />
-                  </CardContent>
+                <Popover>
+                  <PopoverTrigger>
+                    <Button>Add</Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>ADD</CardTitle>
+                        <CardDescription>
+                          Click on Save after Changes
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Input
+                          placeholder="Category"
+                          value={newCategory.category}
+                          onChange={(e) =>
+                            setNewCategory({
+                              ...newCategory,
+                              category: e.target.value,
+                            })
+                          }
+                        />
+                      </CardContent>
 
-                  <CardFooter>
-                    <Button onClick={handleAddCategory}>Save</Button>
-                  </CardFooter>
-                </Card>
-              </PopoverContent>
-            </Popover>
+                      <CardFooter>
+                        <Button onClick={handleAddCategory}>Save</Button>
+                      </CardFooter>
+                    </Card>
+                  </PopoverContent>
+                </Popover>
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -184,7 +179,7 @@ function Category(user) {
                     <PopoverTrigger onClick={() => handleStartEdit(index)}>
                       Edit
                     </PopoverTrigger>
-                    <PopoverContent >
+                    <PopoverContent>
                       <Card>
                         <CardHeader>
                           <CardTitle>Edit</CardTitle>
@@ -205,7 +200,13 @@ function Category(user) {
                           />
                         </CardContent>
                         <CardFooter>
-                          <Button onClick={handleSaveEdit}>Save</Button>
+                          <Button
+                            onClick={() => {
+                              handleSaveEdit(index);
+                            }}
+                          >
+                            Save
+                          </Button>
                         </CardFooter>
                       </Card>
                     </PopoverContent>

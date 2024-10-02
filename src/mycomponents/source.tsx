@@ -67,7 +67,10 @@ function Source() {
       console.log(sourceToDelete._id);
 
       try{
-        const response = await axios.delete("/api/sources/deletesources/", { data: { id: sourceToDelete._id } });        console.log("source Deleted Success"+response)
+        const response = await axios.delete("/api/sources/deletesources/", { data: { id: sourceToDelete._id } });   
+        console.log("source Deleted Success"+response)
+        const updatedSources = sources.filter((_, i) => i !== index);  // Remove the deleted category from the list
+    setSources(updatedSources); 
         
       }catch(error){
         console.log(error)
@@ -75,40 +78,34 @@ function Source() {
     };
   
   const handleStartEdit = (index) => {
-    // const sourceToEdit = sources[index];
-    // setEditSource({ ...sourceToEdit });
+     const sourceToEdit = sources[index];
+     setEditSource({ ...sourceToEdit });
   };
-  const handleSaveEdit = () => {
-    // const token = localStorage.getItem("token");
-    // fetch(`https://spendwiser-backend.vercel.app/api/editSource/${editSource._id}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   body: JSON.stringify({
-    //     source: editSource.source,
-    //     amount: editSource.amount,
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.success) {
-    //       const updatedSources = [...sources];
-    //       const editedIndex = updatedSources.findIndex(
-    //         (source) => source._id === editSource._id
-    //       );
-    //       if (editedIndex !== -1) {
-    //         updatedSources[editedIndex] = data.updatedSource;
-    //         setSources(updatedSources);
-    //         setEditSource({ _id: "", source: "", amount: "" });
-    //       }
-    //     } else {
-    //       console.error("Error editing source:", data.errors);
-    //     }
-    //   })
-    //   .catch((error) => console.error("Error editing source:", error));
-  };
+  const handleSaveEdit = async (index) => {
+    const sourceToEdit = sources[index];
+    console.log("Editing source: ", sourceToEdit);
+
+    try {
+        const response = await axios.put("/api/sources/editsources", {
+            id: sourceToEdit._id,
+            source: editSource.source,
+            amount: editSource.amount,
+        });
+        
+        console.log("Edit source success: ", response.data);
+        
+        const updatedSources = [...sources];
+        const editedIndex = updatedSources.findIndex(source => source._id === sourceToEdit._id);
+        if (editedIndex !== -1) {
+            updatedSources[editedIndex] = { ...updatedSources[editedIndex], ...response.data.updatedSource };
+            setSources(updatedSources);
+            setEditSource({ _id: "", source: "", amount: "" }); // Reset the edit state
+        }
+    } catch (error) {
+        console.error("Error editing source: ", error);
+    }
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -227,7 +224,7 @@ function Source() {
                           />
                         </CardContent>
                         <CardFooter>
-                          <Button onClick={handleSaveEdit}>Save</Button>
+                          <Button onClick={() => handleSaveEdit(index)}>Save</Button>
                         </CardFooter>
                       </Card>
                     </PopoverContent>

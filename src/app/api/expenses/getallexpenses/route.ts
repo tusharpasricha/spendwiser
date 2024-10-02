@@ -1,29 +1,56 @@
-import {connect} from "@/dbConfig/dbConfig";
-import Expense from "../../../../models/expensemodel";
-import { NextRequest,NextResponse } from "next/server";
+import { connect } from "@/dbConfig/dbConfig";
+import Expense from "@/models/expensemodel"; // Assuming you have an expense model
+import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 
-connect()
+connect();
 
-export async function GET(request:NextRequest){
-    try{
-        console.log("finding incomes")
-        const userId = await getDataFromToken(request);
-        const response = await Expense.find({user:userId})
-        
-        console.log(response);
-        
-        return NextResponse.json({
-            message:"Expense fetched successfully",
-            success:true,
-            response
-        })
+export async function GET(request: NextRequest) {
+  try {
+    const userId = await getDataFromToken(request);
+
+    const { searchParams } = new URL(request.url);
+    const year = searchParams.get("year");
+    const month = searchParams.get("month");
+
+    let query = { user: userId };
+    
+    if (year) {
+      query = {
+        ...query,
+        date: {
+          $gte: new Date(`${year}-01-01`),
+          $lte: new Date(`${year}-12-31`),
+        },
+      };
     }
-    catch(error:any){
-        return NextResponse.json({
-            error:error.message
-        },{
-            status:500
-        })
+
+    if (month) {
+      const startDate = new Date(`${year}-${month}-01`);
+      const endDate = new Date(startDate);
+      endDate.setMonth(startDate.getMonth() + 1);
+
+      query = {
+        ...query,
+        date: {
+          $gte: startDate,
+          $lt: endDate,
+        },
+      };
     }
+
+    const response = await Expense.find(query).sort({ date: -1 });
+
+    return NextResponse.json({
+      message: "Expenses fetched successfully",
+      success: true,
+      response,
+    });
+  } catch (error: any) {
+    return NextResponse.json({
+      error: error.message,
+    }, {
+      status: 500,
+    });
+  }
 }

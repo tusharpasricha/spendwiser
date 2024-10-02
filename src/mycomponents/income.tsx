@@ -35,7 +35,7 @@ function Income() {
   const [selectedSource, setSelectedSource] = useState("");
   const [amount, setAmount] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,6 +58,7 @@ function Income() {
     setErrorMsg("");
     if (selectedSource && amount && date) {
       try {
+        setLoading(true);
         console.log("saving income");
         const response = await axios.post("/api/incomes/addincomes", {
           source: selectedSource,
@@ -67,6 +68,10 @@ function Income() {
         console.log("income saved" + response.data);
       } catch (error) {
         console.log(error + "after adding income");
+      }finally{
+        setLoading(false); 
+        setAmount("");
+        setDate(undefined)
       }
     }
   };
@@ -132,7 +137,9 @@ function Income() {
         <p className="text-red-600">{errorMsg}</p>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSave}>Save</Button>
+      <Button onClick={handleSave} disabled={loading}>
+          {loading ? "Saving..." : "Save"}
+        </Button>
       </CardFooter>
     </Card>
   );

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import {
@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { Button } from "@/components/ui/button";
+import axios from "axios"; // Import axios
 
 const months = [
   { label: "Jan", value: 1 },
@@ -53,10 +54,10 @@ const months = [
   { label: "Dec", value: 12 },
 ];
 
-function Track(user) {
+function Track() {
   const [selectedYear, setSelectedYear] = useState(0);
-  const [incomeData, setIncomeData] = useState([]);
-  const [expenseData, setExpenseData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]); // Ensure initial state is an array
+  const [expenseData, setExpenseData] = useState([]); // Ensure initial state is an array
   const [selectedMonth, setSelectedMonth] = useState(null);
 
   const currentYear = new Date().getFullYear();
@@ -66,156 +67,143 @@ function Track(user) {
     (v, i) => startYear + i
   ).reverse();
 
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!selectedYear) return; // Ensure a year is selected before fetching
+      try {
+        const yearMonthQuery =
+          `year=${selectedYear}` +
+          (selectedMonth ? `&month=${selectedMonth}` : "");
 
-//     const fetchData = async () => {
-//       if (!selectedYear) return; // Ensure a year is selected before fetching
-//       try {
-//         const yearMonthQuery = `year=${selectedYear}` + (selectedMonth ? `&month=${selectedMonth}` : "");
+        // Use axios for API calls
+        const incomeResponse = await axios.get(
+          `api/incomes/getallincomes?${yearMonthQuery}`
+        );
+        const incomeData = incomeResponse.data; // Ensure it's the expected structure
+        if (!Array.isArray(incomeData)) {
+          console.error("Income data is not an array:", incomeData);
+          return; // Stop execution if data is not an array
+        }
+        setIncomeData(incomeData);
 
-//         const incomeResponse = await fetch(
-//           `https://spendwiser-backend.vercel.app/api/incomes?${yearMonthQuery}`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//             },
-//           }
-//         );
-//         if (!incomeResponse.ok) {
-//           throw new Error("Network response for income was not ok");
-//         }
-//         const incomeData = await incomeResponse.json();
-//         setIncomeData(incomeData);
+        const expenseResponse = await axios.get(
+          `/api/expenses/getallexpenses?${yearMonthQuery}`
+        );
+        const expenseData = expenseResponse.data; // Ensure it's the expected structure
+        if (!Array.isArray(expenseData)) {
+          console.error("Expense data is not an array:", expenseData);
+          return; // Stop execution if data is not an array
+        }
+        setExpenseData(expenseData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-//         const expenseResponse = await fetch(
-//           `https://spendwiser-backend.vercel.app/api/expenses?${yearMonthQuery}`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//             },
-//           }
-//         );
-//         if (!expenseResponse.ok) {
-//           throw new Error("Network response for expense was not ok");
-//         }
-//         const expenseData = await expenseResponse.json();
-//         setExpenseData(expenseData);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-
-//     fetchData();
-//   }, [selectedYear, selectedMonth]);
+    fetchData();
+  }, [selectedYear, selectedMonth]);
 
   const handleYearChange = (value) => {
-    // setSelectedYear(value);
-    // setSelectedMonth(null); // Reset month when year changes
+    setSelectedYear(value);
+    setSelectedMonth(null); // Reset month when year changes
   };
 
   const handleMonthChange = (monthValue) => {
-    // setSelectedMonth(monthValue);
+    setSelectedMonth(monthValue);
   };
 
   return (
     <div className="mt-8 mb-8">
-    <Drawer>
-
-      <DrawerTrigger >
-        <div className="flex flex-col justify-center items-center min-h-96">
+      <Drawer>
+        <DrawerTrigger>
+          <div className="flex flex-col justify-center items-center min-h-96">
             <div>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger >
-              <Button>Analyze</Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Open the tracker to analyze monthly and yearly expenses</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        </div>
-        {/* <div>
-            rgrt
-        </div> */}
-        </div>
-      </DrawerTrigger>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button>Analyze</Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      Open the tracker to analyze monthly and yearly expenses
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+        </DrawerTrigger>
 
-      <DrawerContent className="flex items-center bg-white dark:bg-gray-800 text-black dark:text-gray-300">
-        <DrawerHeader className="mb-10">
-          <DrawerTitle className="text-black dark:text-white">
-            Expense report for
-          </DrawerTitle>
-          <DrawerDescription className="text-gray-700 dark:text-gray-400">
-            <Select onValueChange={handleYearChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Year" />
-              </SelectTrigger>
-              <SelectContent>
-                {years.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year}
-                  </SelectItem>
+        <DrawerContent className="flex items-center bg-white dark:bg-gray-800 text-black dark:text-gray-300">
+          <DrawerHeader className="mb-10">
+            <DrawerTitle className="text-black dark:text-white">
+              Expense report for
+            </DrawerTitle>
+            <DrawerDescription className="text-gray-700 dark:text-gray-400">
+              <Select onValueChange={handleYearChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  {years.map((year) => (
+                    <SelectItem key={year} value={year}>
+                      {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Item</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Income</TableCell>
+                    <TableCell className="text-right">
+                      ₹
+                      {incomeData.reduce((acc, item) => acc + item.amount, 0).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Expense</TableCell>
+                    <TableCell className="text-right">
+                      ₹
+                      {expenseData.reduce((acc, item) => acc + item.amount, 0).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </DrawerDescription>
+            <Separator />
+          </DrawerHeader>
+
+          <Separator />
+
+          <DrawerFooter>
+            <Tabs defaultValue="account" className="w-[400px]">
+              <TabsList>
+                {months.map((month) => (
+                  <TabsTrigger
+                    key={month.value}
+                    value={month.label}
+                    onClick={() => handleMonthChange(month.value)}
+                  >
+                    {month.label}
+                  </TabsTrigger>
                 ))}
-              </SelectContent>
-            </Select>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px]">Item</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">Income</TableCell>
-                  <TableCell className="text-right">
-                    ₹
-                    {incomeData
-                      .reduce((acc, item) => acc + item.amount, 0)
-                      .toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="font-medium">Expense</TableCell>
-                  <TableCell className="text-right">
-                    ₹
-                    {expenseData
-                      .reduce((acc, item) => acc + item.amount, 0)
-                      .toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </DrawerDescription>
-          <Separator />
-        </DrawerHeader>
+              </TabsList>
+            </Tabs>
 
-        <Separator />
-
-        <DrawerFooter>
-          <Tabs defaultValue="account" className="w-[400px]">
-            <TabsList>
-              {months.map((month) => (
-                <TabsTrigger
-                  key={month.value}
-                  value={month.label}
-                  onClick={() => handleMonthChange(month.value)}
-                >
-                  {month.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-
-          <DrawerClose className="text-gray-700 dark:text-gray-400"></DrawerClose>
-          <Separator />
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+            <DrawerClose className="text-gray-700 dark:text-gray-400"></DrawerClose>
+            <Separator />
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
