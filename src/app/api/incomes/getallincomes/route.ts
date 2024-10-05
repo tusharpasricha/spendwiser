@@ -46,9 +46,10 @@ export async function GET(request: NextRequest) {
       success: true,
       response,
     });
-  } catch (error: any) {
+  } catch (error) {
+    const err= error as Error
     return NextResponse.json({
-      error: error.message,
+      error: err.message,
     }, {
       status: 500,
     });

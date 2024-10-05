@@ -40,15 +40,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-function Source() {
-  const [sources, setSources] = useState([{ source: "", amount: "" }]);
+interface Source {
+  _id?: string; // Optional for new sources
+  source: string;
+  amount: string;
+}
 
-  const [newSource, setNewSource] = useState({ source: "", amount: "" });
-  const [editSource, setEditSource] = useState({
-    _id: "",
-    source: "",
-    amount: "",
-  });
+
+function Source() {
+  const [sources, setSources] = useState<Source[]>([]);
+  const [newSource, setNewSource] = useState<Source>({ source: "", amount: "" });
+  const [editSource, setEditSource] = useState<Source>({ _id: "", source: "", amount: "" });
+  
 
   const handleAddSource = async() => {
     console.log("Adding new source" + newSource)
@@ -61,7 +64,7 @@ function Source() {
   };
 
 
-  const handleDeleteSource = async (index) => {
+  const handleDeleteSource = async (index:number) => {
     console.log("here"+index)
      const sourceToDelete = sources[index];
       console.log(sourceToDelete._id);
@@ -77,11 +80,11 @@ function Source() {
       }
     };
   
-  const handleStartEdit = (index) => {
+  const handleStartEdit = (index:number) => {
      const sourceToEdit = sources[index];
      setEditSource({ ...sourceToEdit });
   };
-  const handleSaveEdit = async (index) => {
+  const handleSaveEdit = async (index:number) => {
     const sourceToEdit = sources[index];
     console.log("Editing source: ", sourceToEdit);
 

@@ -39,11 +39,17 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect } from "react";
 
-function Category() {
-  const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState({ category: "" });
-  const [editCategory, setEditCategory] = useState({ _id: "", category: "" });
+interface Category {
+  _id: string; // or the appropriate type
+  category: string;
+}
 
+
+function Category() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategory, setNewCategory] = useState<Category>({ _id: "", category: "" });
+  const [editCategory, setEditCategory] = useState<Category>({ _id: "", category: "" });
+  
   const handleAddCategory = async () => {
     console.log("Adding new category" + newCategory);
     try {
@@ -57,7 +63,7 @@ function Category() {
     }
   };
 
-  const handleDeleteCategory = async (index) => {
+  const handleDeleteCategory = async (index: number) => {
     console.log("here" + index);
     const categoryToDelete = categories[index];
     console.log(categoryToDelete._id);
@@ -74,11 +80,11 @@ function Category() {
     }
   };
 
-  const handleStartEdit = (index) => {
+  const handleStartEdit = (index:number) => {
     const categoryToEdit = categories[index];
     setEditCategory({ ...categoryToEdit });
   };
-  const handleSaveEdit = async (index) => {
+  const handleSaveEdit = async (index:number) => {
     const categoryToEdit = categories[index];
 
     console.log("Editing category: ", categoryToEdit);

@@ -19,7 +19,7 @@ function List() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/expenses/getallexpenses");
+        const response = await axios.get(`/api/expenses/getallexpenses`);
         console.log("response", response.data.response);
         setExpenses(response.data.response);
       } catch (error) {
@@ -31,7 +31,7 @@ function List() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/incomes/getallincomes");
+        const response = await axios.get(`/api/incomes/getallincomes`);
         console.log("response", response.data.response);
         setIncomes(response.data.response);
       } catch (error) {
@@ -42,12 +42,12 @@ function List() {
   }, []);
 
   const transactions = [
-    ...incomes.map((income, index) => ({
+    ...incomes.map((income) => ({
       ...income,
       type: "INCOME",
       timestamp: new Date(income.date).getTime(),
     })),
-    ...expenses.map((expense, index) => ({
+    ...expenses.map((expense) => ({
       ...expense,
       type: "EXPENSE",
       timestamp: new Date(expense.date).getTime(),

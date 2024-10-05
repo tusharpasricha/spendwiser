@@ -20,9 +20,10 @@ export async function POST(request:NextRequest){
             savedCategory
         })
     }
-    catch(error:any){
+    catch(error){
+        const err = error as Error
         return NextResponse.json({
-            error:error.message
+            error:err.message
         },{
             status:500
         })

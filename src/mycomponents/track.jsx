@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs,  TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -77,9 +77,9 @@ function Track() {
 
         // Use axios for API calls
         const incomeResponse = await axios.get(
-          `api/incomes/getallincomes?${yearMonthQuery}`
+          `/api/incomes/getallincomes?${yearMonthQuery}`
         );
-        const incomeData = incomeResponse.data; // Ensure it's the expected structure
+        const incomeData = incomeResponse.data.response; // Ensure it's the expected structure
         if (!Array.isArray(incomeData)) {
           console.error("Income data is not an array:", incomeData);
           return; // Stop execution if data is not an array
@@ -89,7 +89,7 @@ function Track() {
         const expenseResponse = await axios.get(
           `/api/expenses/getallexpenses?${yearMonthQuery}`
         );
-        const expenseData = expenseResponse.data; // Ensure it's the expected structure
+        const expenseData = expenseResponse.data.response; // Ensure it's the expected structure
         if (!Array.isArray(expenseData)) {
           console.error("Expense data is not an array:", expenseData);
           return; // Stop execution if data is not an array

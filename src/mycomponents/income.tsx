@@ -29,9 +29,14 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
+interface Source {
+  _id: string; // or whatever type your ID is
+  source: string; // The name of the source
+}
+
 function Income() {
-  const [date, setDate] = useState();
-  const [sources, setSources] = useState([]);
+  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [sources, setSources] = useState<Source[]>([]);
   const [selectedSource, setSelectedSource] = useState("");
   const [amount, setAmount] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -41,10 +46,10 @@ function Income() {
     const fetchData = async () => {
       try {
         const response = await axios.get("/api/sources/getallsources");
-        console.log("response", response.data.response);
+        console.log("Getting all sources", response.data.response);
         setSources(response.data.response);
       } catch (error) {
-        console.log(error + "after getting all sources");
+        console.log("Error getting all sources" + error);
       }
     };
     fetchData();
@@ -66,6 +71,7 @@ function Income() {
           date: date,
         });
         console.log("income saved" + response.data);
+
       } catch (error) {
         console.log(error + "after adding income");
       }finally{
